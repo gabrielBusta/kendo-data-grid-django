@@ -1,22 +1,98 @@
 {% load staticfiles %}
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>MWM Hands on Test</title>
         <link rel="icon", type="image/png" href="{% static 'styles/images/favicon.png' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/examples-offline.css' %}" />
         <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'styles/kendo.rtl.min.css' %}" />
         <link rel="stylesheet" href="{% static 'styles/kendo.default.min.css' %}"/>
         <link rel="stylesheet" href="{% static 'styles/kendo.default.mobile.min.css' %}"/>
     </head>
     <body>
-        <div id="grid"></div>
+        <div id="example">
+            <div id="grid"></div>
+        </div>
         <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/jszip.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <script src="{% static 'js/console.js' %}"></script>
+        <script src="{% static 'js/people.js' %}"></script>
         <script>
         $(function() {
             $("#grid").kendoGrid({
-                /* TODO: Pull JSON data from the DB and populate the grid. */
+                dataSource: {
+                    data: createRandomData(50),
+                    schema: {
+                        model: {
+                            fields: {
+                                City: { type: "string" },
+                                Title: { type: "string" },
+                                BirthDate: { type: "date" }
+                            }
+                        }
+                    },
+                    pageSize: 15
+                },
+                height: 550,
+                scrollable: true,
+                filterable: {
+                    extra: false,
+                    operators: {
+                        string: {
+                            startswith: "Starts with",
+                            eq: "Is equal to",
+                            neq: "Is not equal to"
+                        }
+                    }
+                },
+                pageable: true,
+                columns: [
+                    {
+                        title: "Name",
+                        width: 160,
+                        filterable: false,
+                        template: "#=FirstName# #=LastName#"
+                    },
+                    {
+                        field: "City",
+                        width: 130,
+                        filterable: {
+                            ui: cityFilter
+                       }
+                    },
+                    {
+                        field: "Title",
+                        filterable: {
+                            ui: titleFilter
+                        }
+                    },
+                    {
+                        field: "BirthDate",
+                        title: "Birth Date",
+                        format: "{0:MM/dd/yyyy HH:mm tt}",
+                        filterable: {
+                            ui: "datetimepicker"
+                        }
+                    }
+               ]
             });
         });
+
+        function titleFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: titles
+            });
+        }
+
+        function cityFilter(element) {
+            element.kendoDropDownList({
+                dataSource: cities,
+                optionLabel: "--Select Value--"
+            });
+        }
         </script>
     </body>
 </html>
