@@ -8,8 +8,15 @@
         <link rel="stylesheet" href="{% static 'styles/kendo.default.mobile.min.css' %}"/>
     </head>
     <body>
-        <p>TODO: ADD KENDO DATA GRID WIDGET.</p>
+        <div id="grid"></div>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
+        <script>
+        $(function() {
+            $("#grid").kendoGrid({
+                /* TODO: Pull JSON data from the DB and populate the grid. */
+            });
+        });
+        </script>
     </body>
 </html>
