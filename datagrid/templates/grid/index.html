@@ -5,16 +5,14 @@
         <meta charset="utf-8">
         <title>MWM Hands on Test</title>
         <link rel="icon", type="image/png" href="{% static 'styles/images/favicon.png' %}"/>
-        <link rel="stylesheet" href="{% static 'styles/examples-offline.css' %}" />
+        <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
         <link rel="stylesheet" href="{% static 'styles/kendo.common.min.css' %}"/>
         <link rel="stylesheet" href="{% static 'styles/kendo.rtl.min.css' %}" />
         <link rel="stylesheet" href="{% static 'styles/kendo.default.min.css' %}"/>
         <link rel="stylesheet" href="{% static 'styles/kendo.default.mobile.min.css' %}"/>
     </head>
     <body>
-        <div id="example">
-            <div id="grid"></div>
-        </div>
+        <div id="grid" style="font-size: 14px;"></div>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/jszip.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
@@ -24,7 +22,7 @@
         $(function() {
             $("#grid").kendoGrid({
                 dataSource: {
-                    data: createRandomData(50),
+                    data: createRandomData(200),
                     schema: {
                         model: {
                             fields: {
@@ -34,9 +32,8 @@
                             }
                         }
                     },
-                    pageSize: 15
+                    pageSize: 100
                 },
-                height: 550,
                 scrollable: true,
                 filterable: {
                     extra: false,

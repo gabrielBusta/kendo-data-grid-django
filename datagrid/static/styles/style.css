@@ -77,15 +77,6 @@ a:hover
     text-decoration: none;
 }
 
-#example
-{
-    margin: 2em 0 5em;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    font-size: 14px;
-}
-
 /*console*/
 
 .console
@@ -678,7 +669,7 @@ ul.keyboard-legend li a {
     background: #fff;
     border: 0;
   }
-  
+
   .hidden-on-narrow {
     display: none !important;
   }
