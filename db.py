@@ -1,20 +1,37 @@
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mwmtest.settings')
+import django
+django.setup()
+from datagrid import models
 import random
-first = True
+import datetime
+
 f = open('data.txt', encoding='UTF-8')
 rows = []
+first = True
 for line in f.readlines():
     if first:
         first = False
         continue
     first_name, last_name, city, job_title, birth_date = line.split('\t')
     rows.append({
-        'first_name': first_name,
-        'last_name': last_name,
-        'job_title': job_title,
-        'birth_date': birth_date,
+        'first_name': first_name.rstrip(),
+        'last_name': last_name.rstrip(),
+        'job_title': job_title.rstrip(),
+        'birth_date': birth_date.rstrip(),
     })
-cities = ['Houston', 'Los Angeles', 'Chicago', 'Redmond', 'London', 'Philadelphia', 'New York', 'Seattle', 'Austin', 'Boston']
+
+cities = ['HOU', 'LA', 'CHI', 'RED', 'LON', 'PHI', 'NY', 'SEA', 'AUS', 'BOS']
 for row in rows:
     row['city'] = random.choice(cities)
-for i in range(0, 10):
-    print(random.choice(rows))
+
+for i in range(0, 50000):
+    row = random.choice(rows)
+    dob = datetime.datetime.strptime(row['birth_date'], "%m/%d/%Y").date()
+    models.Employee.objects.create(
+        first_name=row['first_name'],
+        last_name=row['last_name'],
+        job_title=row['job_title'],
+        birth_date=dob,
+        city=row['city'],
+    )

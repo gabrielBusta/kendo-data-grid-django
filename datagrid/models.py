@@ -2,9 +2,9 @@ from django.db import models
 
 
 class Employee(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    job_title = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    job_title = models.CharField(max_length=50)
     birth_date = models.DateField()
 
     # define city choices and then a city field.
