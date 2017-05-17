@@ -7,9 +7,13 @@ import random
 import datetime
 
 f = open('data.txt', encoding='UTF-8')
+lines = f.readlines()
+f.close()
+
 rows = []
 first = True
-for line in f.readlines():
+for line in lines:
+    # skip the column names.
     if first:
         first = False
         continue
