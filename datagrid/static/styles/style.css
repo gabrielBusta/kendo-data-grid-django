@@ -1,3 +1,12 @@
+#grid
+{
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    font-size: 14px;
+    height: 100%; /* DO NOT USE !important for setting the Grid height! */
+}
+
 /*global*/
 
 .floatWrap:after,#example:after{content:"";display:block;clear:both}
@@ -14,6 +23,10 @@ body,h1,h2,h3,h4,p,ul,li,a,button
 
 html
 {
+    overflow: hidden;
+    margin:0;
+    padding:0;
+    height: 100%;
     top: 0;
     left: 0;
     overflow-y:scroll;
@@ -75,6 +88,15 @@ a:hover
     background-color: #013a5e;
     color: #fff;
     text-decoration: none;
+}
+
+#example
+{
+    margin: 2em 0 5em;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 14px;
 }
 
 /*console*/

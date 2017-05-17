@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="{% static 'styles/kendo.default.mobile.min.css' %}"/>
     </head>
     <body>
-        <div id="grid" style="font-size: 14px;"></div>
+        <div id="grid"></div>
         <script src="{% static 'js/jquery.min.js' %}"></script>
         <script src="{% static 'js/jszip.min.js' %}"></script>
         <script src="{% static 'js/kendo.all.min.js' %}"></script>
@@ -35,6 +35,7 @@
                     pageSize: 100
                 },
                 scrollable: true,
+                height: window.innerHeight,
                 filterable: {
                     extra: false,
                     operators: {
