@@ -1,6 +1,6 @@
 /* global $ kendo*/
 $(function() {
-    var dataSource = new kendo.data.DataSource({
+    var employeeDataSource = new kendo.data.DataSource({
         transport: {
             read: {
                 url: "https://mwmtest-gabrielbusta.c9users.io/employees/",
@@ -9,14 +9,19 @@ $(function() {
         },
         schema: {
             parse: function(response) {
+                /**
+                * We parse the data only to convert the string representation
+                * of birth dates into JavaScript Date objects.
+                * _JavaScript Date objects are SORTABLE and FILTERABLE_
+                */
                 var employees = [];
                 for (var i = 0; i < response.length; i++) {
                     var employee = {
-                        FirstName: response[i].first_name,
-                        LastName: response[i].last_name,
-                        City: response[i].city,
-                        Title: response[i].job_title,
-                        BirthDate: new Date(response[i].birth_date),
+                        FirstName: response[i].FirstName,
+                        LastName: response[i].LastName,
+                        City: response[i].City,
+                        Title: response[i].Title,
+                        BirthDate: new Date(response[i].BirthDate),
                     };
                     employees.push(employee);
                 }
@@ -34,8 +39,9 @@ $(function() {
             }
         },
     });
+
     $("#grid").kendoGrid({
-        dataSource: dataSource,
+        dataSource: employeeDataSource,
         scrollable: true,
         height: window.innerHeight,
         filterable: {

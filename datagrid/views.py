@@ -5,35 +5,31 @@ from django.http import HttpResponse
 
 
 def index(request):
+    '''Returns a screen displaying a full screen kendo-grid widget.'''
     return render(request, 'grid/index.html', {})
 
 
 def employees(request):
-    data = map(lambda employee: {
-        'first_name': employee.first_name,
-        'last_name': employee.last_name,
-        'city': employee.get_city_display(),
-        'job_title': employee.job_title,
-        'birth_date': str(employee.birth_date),
-    }, Employee.objects.all())
-    
-    data = list(data)
-    
-    data = json.dumps(data)
-    
-    return HttpResponse(data, content_type='application/json')
+    '''Returns every Employee in the database as a list of Json objects.'''
+    # Create a list of dictionaries representing each Employee object.
+    data = list(map(lambda employee: {
+        'FirstName': employee.first_name,
+        'LastName': employee.last_name,
+        'City': employee.get_city_display(),
+        'Title': employee.job_title,
+        'BirthDate': str(employee.birth_date),
+    }, Employee.objects.all()))
+    # Return the list of employee dictionaries we created as a Json string.
+    return HttpResponse(json.dumps(data), content_type='application/json')
     
     
 def titles(request):
+    '''Returns a Json list of all possible values for an Employee's job_title.'''
     data = list(Employee.objects.values_list('job_title', flat=True).distinct())
-    data = json.dumps(data)
-    return HttpResponse(data, content_type='application/json')
+    return HttpResponse(json.dumps(data), content_type='application/json')
     
     
 def cities(request):
-    data = []
-    for choice in Employee.CITY_CHOICES:
-        data.append(choice[1])
-    
-    data = json.dumps(data)
-    return HttpResponse(data, content_type='application/json')
+    '''Returns a Json list of all the possible choices for an Employee's city.'''
+    data = [choice[1] for choice in Employee.CITY_CHOICES]
+    return HttpResponse(json.dumps(data), content_type='application/json')
