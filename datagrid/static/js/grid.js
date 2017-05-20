@@ -8,25 +8,16 @@ $(function() {
             }
         },
         schema: {
-            parse: function(response) {
-                /**
-                * We parse the data only to convert the string representation
-                * of birth dates into JavaScript Date objects.
-                * _JavaScript Date objects are SORTABLE and FILTERABLE_
-                */
-                var employees = [];
-                for (var i = 0; i < response.length; i++) {
-                    var employee = {
-                        FirstName: response[i].FirstName,
-                        LastName: response[i].LastName,
-                        City: response[i].City,
-                        Title: response[i].Title,
-                        BirthDate: new Date(response[i].BirthDate),
-                    };
-                    employees.push(employee);
+            data: function(response) {
+                /* Convert the string representation of birth dates into JavaScript Date objects. */
+                for (var i = 0; i < response.data.length; i++) {
+                    response.data[i].BirthDate = new Date(response.data[i].BirthDate);
                 }
-                return employees;
-            }
+                return response.data;
+            },
+            total: function(response) {
+                return response.total;
+            },
         },
         pageSize: 100,
         model: {
@@ -43,42 +34,45 @@ $(function() {
     $("#grid").kendoGrid({
         dataSource: employeeDataSource,
         scrollable: true,
-        height: window.innerHeight,
         filterable: {
             extra: false,
             operators: {
                 string: {
-                    startswith: "Starts with",
                     eq: "Is equal to",
-                    neq: "Is not equal to"
+                    neq: "Is not equal to",
                 }
-            }
+            },
         },
         pageable: true,
-        columns: [{
-            title: "Name",
-            width: 160,
-            filterable: false,
-            template: "#=FirstName# #=LastName#"
-        }, {
-            field: "City",
-            width: 130,
-            filterable: {
-                ui: cityFilter
-            }
-        }, {
-            field: "Title",
-            filterable: {
-                ui: titleFilter
-            }
-        }, {
-            field: "BirthDate",
-            title: "Birth Date",
-            format: "{0:MM/dd/yyyy}",
-            filterable: {
-                ui: "datetimepicker"
-            }
-        }]
+        columns: [
+            {
+                title: "Name",
+                width: 160,
+                filterable: false,
+                template: "#=FirstName# #=LastName#"
+            },
+            {
+                field: "City",
+                width: 130,
+                filterable: {
+                    ui: cityFilter
+                }
+            },
+            {
+                field: "Title",
+                filterable: {
+                    ui: titleFilter
+                }
+            },
+            {
+                field: "BirthDate",
+                title: "Birth Date",
+                format: "{0:MM/dd/yyyy}",
+                filterable: {
+                    ui: "datepicker",
+                }
+            },
+        ]
     });
 });
 
@@ -89,8 +83,16 @@ function titleFilter(element) {
                 read: {
                     url: "https://mwmtest-gabrielbusta.c9users.io/titles/",
                     dataType: "json"
-                }
-            }
+                },
+            },
+            schema: {
+                data: function(response) {
+                    return response.data;
+                },
+                total: function(response) {
+                    return response.total;
+                },
+            },
         })
     });
 }
@@ -103,7 +105,15 @@ function cityFilter(element) {
                     url: "https://mwmtest-gabrielbusta.c9users.io/cities/",
                     dataType: "json"
                 }
-            }
+            },
+            schema: {
+                data: function(response) {
+                    return response.data;
+                },
+                total: function(response) {
+                    return response.total;
+                },
+            },
         }),
         optionLabel: "--Select Value--"
     });

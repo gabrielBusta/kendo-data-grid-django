@@ -82,7 +82,7 @@ class TitlesViewTestCase(TestCase):
         response = client.get('/titles/')
         self.assertEqual(response.status_code, 200)
         
-        data = json.loads(response.getvalue().decode())
+        data = json.loads(response.getvalue().decode())['data']
         self.assertCountEqual(data, job_titles)
 
 
@@ -117,7 +117,7 @@ class CitiesViewTestCase(TestCase):
         response = client.get('/cities/')
         self.assertEqual(response.status_code, 200)
         
-        data = json.loads(response.getvalue().decode())
+        data = json.loads(response.getvalue().decode())['data']
         self.assertCountEqual(data, cities)
         
         
@@ -147,15 +147,14 @@ class EmployeesViewTestCase(TestCase):
 
     def test_employees_view(self):
         '''Test the /employees/ JSON API endpoint by asserting the attributes of the employees and their content.'''
+        fields = ['FirstName', 'LastName', 'Title', 'BirthDate', 'City']
         client = Client()
         response = client.get('/employees/')
         self.assertEqual(response.status_code, 200)
         
-        data = json.loads(response.getvalue().decode())
-        self.assertCountEqual(
-            data[0].keys(),
-            ['FirstName', 'LastName', 'Title', 'BirthDate', 'City'],
-        )
+        data = json.loads(response.getvalue().decode())['data']
+        self.assertCountEqual(data[0].keys(), fields)
+        
         for employee in data:
             if employee['FirstName'] == 'Marissa':
                 self.assertEqual(employee['LastName'], 'Genders')
