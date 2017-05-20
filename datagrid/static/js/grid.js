@@ -44,7 +44,8 @@ $(function() {
             },
         },
         pageable: true,
-        columns: [
+        columns:
+        [
             {
                 /* TODO: Make this column filterable */
                 title: "Name",
