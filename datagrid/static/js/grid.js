@@ -5,7 +5,7 @@ $(function() {
             read: {
                 url: "https://mwmtest-gabrielbusta.c9users.io/employees/",
                 dataType: "json",
-            }
+            },
         },
         schema: {
             data: function(response) {
@@ -27,7 +27,7 @@ $(function() {
                 City: { type: 'string' },
                 Title: { type: 'string' },
                 BirthDate: { type: 'date'},
-            }
+            },
         },
     });
 
@@ -73,7 +73,7 @@ $(function() {
                     ui: "datepicker",
                 },
             },
-        ]
+        ],
     });
 });
 
@@ -105,7 +105,7 @@ function cityFilter(element) {
                 read: {
                     url: "https://mwmtest-gabrielbusta.c9users.io/cities/",
                     dataType: "json",
-                }
+                },
             },
             schema: {
                 data: function(response) {
