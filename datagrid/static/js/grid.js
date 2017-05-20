@@ -4,7 +4,7 @@ $(function() {
         transport: {
             read: {
                 url: "https://mwmtest-gabrielbusta.c9users.io/employees/",
-                dataType: "json"
+                dataType: "json",
             }
         },
         schema: {
@@ -40,37 +40,38 @@ $(function() {
                 string: {
                     eq: "Is equal to",
                     neq: "Is not equal to",
-                }
+                },
             },
         },
         pageable: true,
         columns: [
             {
+                /* TODO: Make this column filterable */
                 title: "Name",
                 width: 160,
-                filterable: false,
-                template: "#=FirstName# #=LastName#"
+                template: "#=FirstName# #=LastName#",
             },
             {
                 field: "City",
                 width: 130,
                 filterable: {
-                    ui: cityFilter
-                }
+                    ui: cityFilter,
+                },
             },
             {
                 field: "Title",
                 filterable: {
-                    ui: titleFilter
-                }
+                    ui: titleFilter,
+                },
             },
             {
                 field: "BirthDate",
                 title: "Birth Date",
                 format: "{0:MM/dd/yyyy}",
+                filterable: false,
                 filterable: {
                     ui: "datepicker",
-                }
+                },
             },
         ]
     });
@@ -82,7 +83,7 @@ function titleFilter(element) {
             transport: {
                 read: {
                     url: "https://mwmtest-gabrielbusta.c9users.io/titles/",
-                    dataType: "json"
+                    dataType: "json",
                 },
             },
             schema: {
@@ -93,7 +94,7 @@ function titleFilter(element) {
                     return response.total;
                 },
             },
-        })
+        }),
     });
 }
 
@@ -103,7 +104,7 @@ function cityFilter(element) {
             transport: {
                 read: {
                     url: "https://mwmtest-gabrielbusta.c9users.io/cities/",
-                    dataType: "json"
+                    dataType: "json",
                 }
             },
             schema: {
@@ -115,6 +116,6 @@ function cityFilter(element) {
                 },
             },
         }),
-        optionLabel: "--Select Value--"
+        optionLabel: "--Select Value--",
     });
 }

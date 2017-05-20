@@ -4,12 +4,13 @@ from django.http import JsonResponse
 
 
 def index(request):
-    '''Returns a template displaying a full screen kendo-grid widget.'''
+    '''Returns a template with a kendo-grid widget to display Employee data.'''
     return render(request, 'grid/index.html', {})
 
 
 def employees(request):
     '''Returns every Employee in the database as a list of Json objects.'''
+    # TODO: Generate response by introspecting the model.
     # Create a list of dictionaries representing Employee objects.
     data = list(map(lambda employee: {
         'FirstName': employee.first_name,
