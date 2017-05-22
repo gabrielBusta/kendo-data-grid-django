@@ -69,7 +69,6 @@ $(function() {
                 field: "BirthDate",
                 title: "Birth Date",
                 format: "{0:MM/dd/yyyy}",
-                filterable: false,
                 filterable: {
                     ui: "datepicker",
                 },
