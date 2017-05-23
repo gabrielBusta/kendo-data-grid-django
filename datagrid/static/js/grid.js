@@ -21,6 +21,7 @@ $(function() {
         },
         pageSize: 100,
         serverPaging: true,
+        serverFiltering: true,
         model: {
             fields: {
                 first_name: { type: 'string' },
