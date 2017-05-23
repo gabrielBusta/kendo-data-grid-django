@@ -147,7 +147,7 @@ class EmployeesViewTestCase(TestCase):
 
     def test_employees_view(self):
         '''Test the /employees/ JSON API endpoint by asserting the attributes of the employees and their content.'''
-        fields = [field.name for field in Employee._meta.fields]
+        fields = [field.name for field in Employee._meta.fields if field.name is not 'id']
         client = Client()
         response = client.get('/employees/')
         self.assertEqual(response.status_code, 200)

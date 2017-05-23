@@ -53,6 +53,8 @@ class Employee(models.Model):
                 result[field.name] = self.get_city_display()
             elif field.name == 'birth_date':
                 result[field.name] = str(field.value_from_object(self))
+            elif field.name == 'id':
+                continue
             else:
                 result[field.name] = field.value_from_object(self)
         return result
