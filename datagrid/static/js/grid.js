@@ -11,7 +11,7 @@ $(function() {
             data: function(response) {
                 /* Convert the string representation of birth dates into JavaScript Date objects. */
                 for (var i = 0; i < response.data.length; i++) {
-                    response.data[i].BirthDate = new Date(response.data[i].BirthDate);
+                    response.data[i].birth_date = new Date(response.data[i].birth_date);
                 }
                 return response.data;
             },
@@ -20,13 +20,14 @@ $(function() {
             },
         },
         pageSize: 100,
+        serverPaging: true,
         model: {
             fields: {
-                FirstName: { type: 'string' },
-                LastName: { type: 'string' },
-                City: { type: 'string' },
-                Title: { type: 'string' },
-                BirthDate: { type: 'date'},
+                first_name: { type: 'string' },
+                last_name: { type: 'string' },
+                city: { type: 'string' },
+                job_title: { type: 'string' },
+                birth_date: { type: 'date'},
             },
         },
     });
@@ -50,23 +51,25 @@ $(function() {
                 /* TODO: Make this column filterable */
                 title: "Name",
                 width: 160,
-                template: "#=FirstName# #=LastName#",
+                template: "#=first_name# #=last_name#",
             },
             {
-                field: "City",
+                field: "city",
+                title: "City",
                 width: 130,
                 filterable: {
                     ui: cityFilter,
                 },
             },
             {
-                field: "Title",
+                field: "job_title",
+                title: "Title",
                 filterable: {
                     ui: titleFilter,
                 },
             },
             {
-                field: "BirthDate",
+                field: "birth_date",
                 title: "Birth Date",
                 format: "{0:MM/dd/yyyy}",
                 filterable: {

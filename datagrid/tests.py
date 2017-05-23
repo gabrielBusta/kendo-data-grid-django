@@ -147,7 +147,7 @@ class EmployeesViewTestCase(TestCase):
 
     def test_employees_view(self):
         '''Test the /employees/ JSON API endpoint by asserting the attributes of the employees and their content.'''
-        fields = ['FirstName', 'LastName', 'Title', 'BirthDate', 'City']
+        fields = [field.name for field in Employee._meta.fields]
         client = Client()
         response = client.get('/employees/')
         self.assertEqual(response.status_code, 200)
@@ -156,21 +156,21 @@ class EmployeesViewTestCase(TestCase):
         self.assertCountEqual(data[0].keys(), fields)
         
         for employee in data:
-            if employee['FirstName'] == 'Marissa':
-                self.assertEqual(employee['LastName'], 'Genders')
-                self.assertEqual(employee['Title'], 'Account Coordinator')
-                self.assertEqual(employee['BirthDate'], '1992-05-26')
-                self.assertEqual(employee['City'], 'Chicago')
-            if employee['FirstName'] == 'Miguel':
-                self.assertEqual(employee['LastName'], 'Sanchez')
-                self.assertEqual(employee['Title'], 'Technical Writer')
-                self.assertEqual(employee['BirthDate'], '1989-03-28')
-                self.assertEqual(employee['City'], 'Austin')
-            if employee['FirstName'] == 'Carlyn':
-                self.assertEqual(employee['LastName'], 'Uridge')
-                self.assertEqual(employee['Title'], 'Web Developer')
-                self.assertEqual(employee['BirthDate'], '1962-06-15')
-                self.assertEqual(employee['City'], 'Philadelphia')
+            if employee['first_name'] == 'Marissa':
+                self.assertEqual(employee['last_name'], 'Genders')
+                self.assertEqual(employee['job_title'], 'Account Coordinator')
+                self.assertEqual(employee['birth_date'], '1992-05-26')
+                self.assertEqual(employee['city'], 'Chicago')
+            if employee['first_name'] == 'Miguel':
+                self.assertEqual(employee['last_name'], 'Sanchez')
+                self.assertEqual(employee['job_title'], 'Technical Writer')
+                self.assertEqual(employee['birth_date'], '1989-03-28')
+                self.assertEqual(employee['city'], 'Austin')
+            if employee['first_name'] == 'Carlyn':
+                self.assertEqual(employee['last_name'], 'Uridge')
+                self.assertEqual(employee['job_title'], 'Web Developer')
+                self.assertEqual(employee['birth_date'], '1962-06-15')
+                self.assertEqual(employee['city'], 'Philadelphia')
 
  
 class IndexViewTestCase(TestCase):

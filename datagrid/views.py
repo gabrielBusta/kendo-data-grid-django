@@ -1,6 +1,7 @@
 from .models import Employee
 from django.shortcuts import render
 from django.http import JsonResponse
+from itertools import islice
 
 
 def index(request):
@@ -9,18 +10,30 @@ def index(request):
 
 
 def employees(request):
-    '''Returns every Employee in the database as a list of Json objects.'''
-    # TODO: Generate response by introspecting the model.
-    # Create a list of dictionaries representing Employee objects.
-    data = list(map(lambda employee: {
-        'FirstName': employee.first_name,
-        'LastName': employee.last_name,
-        'City': employee.get_city_display(),
-        'Title': employee.job_title,
-        'BirthDate': str(employee.birth_date),
-    }, Employee.objects.all()))
-    # { "data": [ /* employee objects */ ], ... }
-    return JsonResponse({'data': data, 'total': len(data)})
+    '''Returns Employee objects in the database as a list of Json objects.
+GET request parameters:
+    skip - how many data items to skip.
+    take - the number of data items to return.'''
+    
+    # Fetch the paging parameters.
+    skip = request.GET.get('skip', '')
+    take = request.GET.get('take', '')
+    
+    employees = Employee.objects.all()
+
+    # If a paging parameter is not recived:
+    #     Create a list of dictionaries representing ALL Employee objects
+    # else:
+    #     Create a list of dictionaries representing the Employee objects in the desired range.
+    if skip == '' or take == '':
+        data = [employee.asdict() for employee in employees]
+    else:
+        skip = int(skip)
+        take = int(take)
+        data = [employee.asdict() for employee in islice(employees, skip, skip + take)]
+
+    # { "data": [ /* employee Json objects */ ], ... }
+    return JsonResponse({'data': data, 'total': len(employees)})
     
 
 def titles(request):

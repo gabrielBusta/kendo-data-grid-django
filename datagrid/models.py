@@ -38,3 +38,21 @@ class Employee(models.Model):
         choices=CITY_CHOICES,
         default=HOUSTON,
     )
+    
+    def __repr__(self):
+        return 'name: {} {} title: {}'.format(
+            self.first_name,
+            self.last_name,
+            self.job_title,
+        )
+        
+    def asdict(self):
+        result = {}
+        for field in self._meta.fields:
+            if field.name == 'city':
+                result[field.name] = self.get_city_display()
+            elif field.name == 'birth_date':
+                result[field.name] = str(field.value_from_object(self))
+            else:
+                result[field.name] = field.value_from_object(self)
+        return result
