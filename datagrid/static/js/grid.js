@@ -38,21 +38,37 @@ $(function() {
         scrollable: true,
         filterable: {
             extra: false,
-            operators: {
-                string: {
-                    eq: "Is equal to",
-                    neq: "Is not equal to",
-                },
-            },
         },
         pageable: true,
         columns:
         [
             {
-                /* TODO: Make this column filterable */
+                field: "first_name",
                 title: "Name",
                 width: 160,
-                template: "#=first_name# #=last_name#",
+                filterable: {
+                    operators: {
+                        string: {
+                            eq: "Is equal to",
+                            neq: "Is not equal to",
+                            startswith: "Starts with",
+                        },
+                    },
+                },
+            },
+            {
+                field: "last_name",
+                title: "Surname",
+                width: 160,
+                filterable: {
+                    operators: {
+                        string: {
+                            eq: "Is equal to",
+                            neq: "Is not equal to",
+                            startswith: "Starts with",
+                        },
+                    },
+                },
             },
             {
                 field: "city",
@@ -60,6 +76,12 @@ $(function() {
                 width: 130,
                 filterable: {
                     ui: cityFilter,
+                    operators: {
+                        string: {
+                            eq: "Is equal to",
+                            neq: "Is not equal to",
+                        },
+                    },
                 },
             },
             {
@@ -67,6 +89,13 @@ $(function() {
                 title: "Title",
                 filterable: {
                     ui: titleFilter,
+                    operators: {
+                        string: {
+                            eq: "Is equal to",
+                            neq: "Is not equal to",
+                            startswith: "Starts with",
+                        },
+                    },
                 },
             },
             {
@@ -75,6 +104,14 @@ $(function() {
                 format: "{0:MM/dd/yyyy}",
                 filterable: {
                     ui: "datepicker",
+                    operators: {
+                        string: {
+                            lt: "Less than",
+                            lte: "Less than or equal to",
+                            gt: "Greater than",
+                            gte: "Greater than or equal to",
+                        },
+                    },
                 },
             },
         ],

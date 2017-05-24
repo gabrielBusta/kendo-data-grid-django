@@ -1,8 +1,11 @@
 from .models import Employee
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import JsonResponse
-from querystring_parser import parser
+from querystring_parser import parser as argparser
+from dateutil import parser as dateparser
 from itertools import islice
+import datetime
 
 
 def index(request):
@@ -14,51 +17,106 @@ def employees(request):
     '''Returns Employee objects in the database as a list of Json objects.
 GET request parameters:
     skip - how many data items to skip.
-    take - the number of data items to return.'''
+    take - the number of data items to return (i.e. the pageSize).
+    filters - filtering criteria for employees objects. 
+    '''
     
-    # Fetch the request parameters.
+    # Parse the request arguments.
     args = getargs(request)
+    
     employees = Employee.objects.all()
     
-    if args['filters'] is not None:
-        for i in args['filters']:
-            kwargs = {args['filters'][i]['field']: args['filters'][i]['value']}
-            if args['filters'][i]['operator'] == 'eq':
-                employees = employees.filter(**kwargs)
-                print(len(employees))
-            if args['filters'][i]['operator'] == 'neq':
-                employees = employees.exclude(**kwargs)
+    if args['filters'] is not '':
+        employees = applyfilters(employees, args['filters'])
 
-    # If a paging parameter is not recived:
-    #     Create a list of dictionaries representing ALL Employee objects
-    # else:
-    #     Create a list of dictionaries representing the Employee objects in the desired range.
-    if args['skip'] == None or args['take'] == None:
+    if args['skip'] == '' or args['take'] == '':
         data = [employee.asdict() for employee in employees]
     else:
-        data = [employee.asdict() for employee in islice(employees, args['skip'], args['skip'] + args['take'])]
+        data = [employee.asdict() for employee in getslice(employees, args['skip'], args['take'])]
 
     # { "data": [ /* employee Json objects */ ], ... }
     return JsonResponse({'data': data, 'total': len(employees)})
     
 
 def getargs(request):
-    '''Returns the arguments sent in the request as a dictionary.'''
-    args = parser.parse(request.GET.urlencode())
+    '''Returns the arguments sent in the request as a dictionary in this format:
+args = {
+    'skip': the number of employees to skip or '' if the argument was not recieved.
+    'take': the number of employees to return or '' if the argument was not recieved.
+    'filters': {
+        index: {
+            'field': the name of the field to use for filtering.
+            'value': the value used to filter the field.
+            'operator': a string representing the logical operator used to filter
+                        the field. e.g. eq for equals to, lt for less than, ect.
+    }
+}
+'''
+    args = argparser.parse(request.GET.urlencode())
     
-    skip = args.get('skip', None)
-    if skip is not None:
+    skip = args.get('skip', '')
+    if skip is not '':
         skip = int(skip)
     
-    take = args.get('take', None)
-    if take is not None:
+    take = args.get('take', '')
+    if take is not '':
         take = int(take)
     
-    filters = args.get('filter', None)
-    if filters is not None:
-        filters = filters.get('filters', None)
+    filters = args.get('filter', '')
+    if filters is not '':
+        filters = filters.get('filters', '')
     
     return {'skip': skip, 'take': take, 'filters': filters}
+
+
+def applyfilters(employees, filters):
+    '''Applies the desired filters to an Employee query set.
+Returns the filtered query set. filters must be a dictionary in this format:
+filters = {
+    index: {
+            'field': the name of the field to use for filtering.
+            'value': the value used to filter the field.
+            'operator': a string representing the logical operator used to filter
+                        the field. e.g. eq for equals to, lt for less than, ect.
+    }
+}'''
+    for index in filters:
+        # If we are filtering using the city field we need to
+        # convert the display name of the city into it's real value.
+        if filters[index]['field'] == 'city':
+            for value, display in Employee.CITY_CHOICES:
+                if display == filters[index]['value']:
+                    filters[index]['value'] = value
+
+        # If we are filtering using the birth_date field we need to
+        # convert the date string into a date object.
+        if filters[index]['field'] == 'birth_date':
+            filters[index]['value'] = dateparser.parse(
+                filters[index]['value'],
+                fuzzy=True,
+            ).date() # cast the datetime object into a date object.
+        
+        if filters[index]['operator'] == 'eq' or filters[index]['operator'] == 'neq':
+            kwargs = {filters[index]['field']: filters[index]['value']}
+            if filters[index]['operator'] == 'eq':
+                employees = employees.filter(**kwargs)
+            elif filters[index]['operator'] == 'neq':
+                employees = employees.exclude(**kwargs)
+        else:
+            kwargs = {'{}__{}'.format(filters[index]['field'], filters[index]['operator']): filters[index]['value']}
+            employees = employees.filter(**kwargs)
+                
+    return employees
+
+
+def getslice(iterable, skip, take):
+    '''Skips 'skip' items then grabs 'take' items from a iterable sequence.
+Returns a generator containing the desired slice of the iterable sequence.
+If we run out of items to take, after skiping 'skip' items, we just take items util we exhaust the squence.'''
+    if skip + take > len(iterable):
+        return islice(iterable, skip, None)
+    else:
+        return islice(iterable, skip, skip + take)
 
 
 def titles(request):

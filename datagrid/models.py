@@ -9,16 +9,16 @@ class Employee(models.Model):
 
     # define city choices and then a city field.
 
-    HOUSTON = 'Houston'
-    LOS_ANGELES = 'Los Angeles'
-    CHICAGO = 'Chicago'
-    REDMOND = 'Redmond'
-    LONDON = 'London'
-    PHILADELPHIA = 'Philadelphia'
-    NEW_YORK = 'New York'
-    SEATTLE = 'Seattle'
-    AUSTIN = 'Austin'
-    BOSTON = 'Boston'
+    HOUSTON = 'HOU'
+    LOS_ANGELES = 'LA'
+    CHICAGO = 'CHI'
+    REDMOND = 'RED'
+    LONDON = 'LON'
+    PHILADELPHIA = 'PHI'
+    NEW_YORK = 'NY'
+    SEATTLE = 'SEA'
+    AUSTIN = 'AUS'
+    BOSTON = 'BOS'
 
     CITY_CHOICES = (
         (HOUSTON, 'Houston'),
@@ -34,7 +34,7 @@ class Employee(models.Model):
     )
 
     city = models.CharField(
-        max_length=15,
+        max_length=3,
         choices=CITY_CHOICES,
         default=HOUSTON,
     )
