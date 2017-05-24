@@ -1,5 +1,4 @@
 from .models import Employee
-from django.db.models import Q
 from django.shortcuts import render
 from django.http import JsonResponse
 from querystring_parser import parser as argparser
@@ -30,7 +29,6 @@ GET request parameters:
         employees = applyfilters(employees, args['filters'])
 
     if args['sort'] != '':
-        print(args['sort'])
         employees = applysort(employees, args['sort'])
 
     if args['skip'] == '' or args['take'] == '':
@@ -120,7 +118,6 @@ filters = {
 def applysort(employees, sort):
     if sort['dir'] == 'desc':
         sort['field'] = '-{}'.format(sort['field'])
-    print(sort['field'])
     return employees.order_by(sort['field'])
 
 
