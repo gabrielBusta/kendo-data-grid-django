@@ -22,6 +22,7 @@ $(function() {
         pageSize: 100,
         serverPaging: true,
         serverFiltering: true,
+        serverSorting: true,
         model: {
             fields: {
                 first_name: { type: 'string' },
@@ -39,6 +40,7 @@ $(function() {
         filterable: {
             extra: false,
         },
+        sortable: true,
         pageable: true,
         columns:
         [

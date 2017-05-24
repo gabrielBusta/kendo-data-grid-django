@@ -26,8 +26,12 @@ GET request parameters:
     
     employees = Employee.objects.all()
     
-    if args['filters'] is not '':
+    if args['filters'] != '':
         employees = applyfilters(employees, args['filters'])
+
+    if args['sort'] != '':
+        print(args['sort'])
+        employees = applysort(employees, args['sort'])
 
     if args['skip'] == '' or args['take'] == '':
         data = [employee.asdict() for employee in employees]
@@ -53,20 +57,24 @@ args = {
 }
 '''
     args = argparser.parse(request.GET.urlencode())
-    
+
     skip = args.get('skip', '')
-    if skip is not '':
+    if skip != '':
         skip = int(skip)
     
     take = args.get('take', '')
-    if take is not '':
+    if take != '':
         take = int(take)
+        
+    sort = args.get('sort', '')
+    if sort != '':
+        sort = sort[0]
     
     filters = args.get('filter', '')
-    if filters is not '':
+    if filters != '':
         filters = filters.get('filters', '')
     
-    return {'skip': skip, 'take': take, 'filters': filters}
+    return {'skip': skip, 'take': take, 'filters': filters, 'sort': sort}
 
 
 def applyfilters(employees, filters):
@@ -107,6 +115,13 @@ filters = {
             employees = employees.filter(**kwargs)
                 
     return employees
+
+
+def applysort(employees, sort):
+    if sort['dir'] == 'desc':
+        sort['field'] = '-{}'.format(sort['field'])
+    print(sort['field'])
+    return employees.order_by(sort['field'])
 
 
 def getslice(iterable, skip, take):
